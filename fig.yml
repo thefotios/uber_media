@@ -1,0 +1,35 @@
+# TODO: Add /tv, /movies, /tmp volumes
+data:
+    image: ubuntu
+    volumes:
+        - /mnt/downloads:/done
+        - /etc/localtime:/etc/localtime:ro
+    privileged: true
+sonarr:
+    image: tuxeh/sonarr
+    ports:
+        - "8989:8989"
+    volumes:
+        - ./config:/volumes/config
+    volumes_from:
+        - data
+    links:
+        - nzbget
+couchpotato:
+    image: aostanin/couchpotato
+    ports:
+        - "5050:5050"
+    volumes:
+        - ./config/couchpotato:/data
+    volumes_from:
+        - data
+    links:
+        - nzbget
+nzbget:
+    image: aostanin/nzbget
+    ports:
+        - "6789:6789"
+    volumes:
+        - ./config/nzbget:/data
+    volumes_from:
+        - data
